@@ -1,4 +1,4 @@
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, Dimensions, Image, Linking, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -25,17 +25,17 @@ export default function Home() {
     const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<IMessage[]>([])
+    const [history, setHistory] = useState<IMessage[][]>([])
 
     const [open, setOpen] = useState(false);
     const slideAnim = useRef(new Animated.Value(-screenWidth)).current;
 
     function newChat() {
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 0,
-                routes: [{ name: 'Chat' }],   // nome da rota no Tab
-            }),
-        );
+        setHistory(prev => [...prev, messages]);
+        setMessage('')
+        setMessages([])
+        setId(uuid.v4())
+        getLocation()
     }
     function submit() {
         if (!message.trim()) return;
@@ -89,6 +89,10 @@ export default function Home() {
                 useNativeDriver: false,
             }).start();
         }
+    }
+    function selectChat(item: IMessage[]) {
+        setMessages(item)
+        setId(item[0].chatId)
     }
 
     useEffect(() => {
@@ -178,10 +182,13 @@ export default function Home() {
                 <Pressable style={styles.backdrop} onPress={toggleMenu} />
             )}
             <Animated.View style={[styles.sideMenu, { left: slideAnim }]}>
-                <TouchableOpacity>
-                    <Text style={styles.menuItem}>Chat 1</Text>
-                </TouchableOpacity>
+                {history.map((item, index) => (
+                    <TouchableOpacity key={index} onPress={() => selectChat(item)}>
+                        <Text style={styles.menuItem}>Chat {index + 1}</Text>
+                    </TouchableOpacity>
+                ))}
             </Animated.View>
+
         </View>
     )
 }
