@@ -1,5 +1,6 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { IMessage } from '../screens/home';
 
 interface I {
@@ -8,6 +9,9 @@ interface I {
 
 export default function CustomChat({ messages }: I) {
 
+    function download(data) {
+        //Não pronto para baixar
+    }
 
     return (
         <FlatList
@@ -15,7 +19,13 @@ export default function CustomChat({ messages }: I) {
             keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (
                 <View style={[styles.bubble, item.sent ? { alignSelf: 'flex-end', backgroundColor: '#007AFF' } : { alignSelf: 'flex-start', backgroundColor: '#444444' }]}>
-                    <Text style={styles.bubbleText}>{item.data}</Text>
+                    {
+                        item.type == "text"
+                            ? <Text style={styles.bubbleText}>{item.data}</Text>
+                            : <TouchableOpacity onPress={() => download(item.data)}>
+                                <FontAwesome6 name="file-pdf" size={30} color="white" iconStyle='solid' />
+                            </TouchableOpacity>
+                    }
                 </View>
             )}
             contentContainerStyle={styles.listContent}
