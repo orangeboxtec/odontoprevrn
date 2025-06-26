@@ -157,13 +157,13 @@ export default function Home() {
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={toggleMenu}>
-                    <FontAwesome6 name="bars" size={20} color="black" iconStyle='solid' />;
+                    <FontAwesome6 name="bars" size={20} color="black" iconStyle='solid' />
                 </TouchableOpacity>
 
                 <Text style={styles.headerText}>OdontoPrev IA</Text>
 
                 <TouchableOpacity onPress={newChat}>
-                    <FontAwesome6 name="comment-medical" size={20} color="black" iconStyle='outline' />;
+                    <FontAwesome6 name="comment-medical" size={20} color="black" iconStyle='outline' />
                 </TouchableOpacity>
             </View>
             {

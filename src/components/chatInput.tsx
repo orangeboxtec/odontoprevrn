@@ -35,7 +35,7 @@ export default function ChatInput({ message, setMessage, submit }: I) {
                             onChangeText={setMessage}
                         />
                         <TouchableOpacity onPress={submit} disabled={message.length <= 0} style={[styles.sendButton, message.length > 0 ? { backgroundColor: '#007bff' } : { backgroundColor: '#007bff65' }]}>
-                            <FontAwesome6 name="arrow-up" size={15} color="#FFF" iconStyle='solid' />;
+                            <FontAwesome6 name="arrow-up" size={15} color="#FFF" iconStyle='solid' />
                         </TouchableOpacity>
                     </View>
                 </TouchableWithoutFeedback>
