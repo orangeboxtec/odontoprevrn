@@ -60,6 +60,10 @@ export default function Chat() {
         };
 
         const newMessages = [...messages, userMsg];
+        requestAnimationFrame(() =>
+            scrollRef.current?.scrollToEnd({ animated: true })
+        );
+
         setMessages(newMessages);
         setMessage('');
         api.post('/send', {
