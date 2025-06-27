@@ -66,10 +66,10 @@ export default function Chat() {
                 longitude: location?.longitude,
             },
         }).then((resp) => {
-            resp.data.forEach((item: any) => {
+            resp.data.forEach((item: any, index: number) => {
                 const botMsg: IMessage = {
                     chatId: id,
-                    id: newMessages.length + 1,
+                    id: (newMessages.length + 1) + index,
                     data: item.data ?? '',
                     createdAt: new Date(),
                     sent: false,
