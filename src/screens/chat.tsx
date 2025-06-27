@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Animated, Dimensions, Image, Linking, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Animated, Dimensions, Image, KeyboardAvoidingView, Linking, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import CustomChat from '../components/chat';
@@ -32,6 +32,8 @@ export default function Chat() {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<IMessage[]>([])
     const [history, setHistory] = useState<IMessage[][]>([])
+
+    const insets = useSafeAreaInsets();
 
     const [open, setOpen] = useState(false);
     const slideAnim = useRef(new Animated.Value(-screenWidth)).current;
@@ -167,41 +169,47 @@ export default function Chat() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={toggleMenu}>
-                    <FontAwesome6 name="bars" size={20} color="black" iconStyle='solid' />
-                </TouchableOpacity>
-
-                <Text style={styles.headerText}>OdontoPrev</Text>
-
-                <TouchableOpacity onPress={newChat}>
-                    <FontAwesome6 name="comment-medical" size={20} color="black" iconStyle='outline' />
-                </TouchableOpacity>
-            </View>
-            {
-                messages.length > 0
-                    ?
-                    <CustomChat messages={messages} />
-                    : <View style={styles.content}>
-                        <Image source={require('../assets/logo.png')} style={styles.contentImage} />
-                        <Text style={styles.contentTitle}>Olá, eu sou o Dom</Text>
-                        <Text style={styles.contentSubTitle}>Como posso ajudar você hoje?</Text>
-                    </View>
-            }
-            <ChatInput setMessage={setMessage} message={message} submit={submit} />
-
-            {open && (
-                <Pressable style={styles.backdrop} onPress={toggleMenu} />
-            )}
-            <Animated.View style={[styles.sideMenu, { left: slideAnim }]}>
-                {history.map((item, index) => (
-                    <TouchableOpacity key={index} onPress={() => selectChat(item)}>
-                        <Text style={styles.menuItem}>Chat {index + 1}</Text>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={insets.bottom}
+        >
+            <SafeAreaView style={styles.container}>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={toggleMenu}>
+                        <FontAwesome6 name="bars" size={20} color="black" iconStyle='solid' />
                     </TouchableOpacity>
-                ))}
-            </Animated.View>
-        </SafeAreaView>
+
+                    <Text style={styles.headerText}>OdontoPrev</Text>
+
+                    <TouchableOpacity onPress={newChat}>
+                        <FontAwesome6 name="comment-medical" size={20} color="black" iconStyle='outline' />
+                    </TouchableOpacity>
+                </View>
+                {
+                    messages.length > 0
+                        ?
+                        <CustomChat messages={messages} />
+                        : <View style={styles.content}>
+                            <Image source={require('../assets/logo.png')} style={styles.contentImage} />
+                            <Text style={styles.contentTitle}>Olá, eu sou o Dom</Text>
+                            <Text style={styles.contentSubTitle}>Como posso ajudar você hoje?</Text>
+                        </View>
+                }
+                <ChatInput setMessage={setMessage} message={message} submit={submit} />
+
+                {open && (
+                    <Pressable style={styles.backdrop} onPress={toggleMenu} />
+                )}
+                <Animated.View style={[styles.sideMenu, { left: slideAnim }]}>
+                    {history.map((item, index) => (
+                        <TouchableOpacity key={index} onPress={() => selectChat(item)}>
+                            <Text style={styles.menuItem}>Chat {index + 1}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </Animated.View>
+            </SafeAreaView>
+        </KeyboardAvoidingView>
     )
 }
 

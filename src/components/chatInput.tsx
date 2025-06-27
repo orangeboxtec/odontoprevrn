@@ -1,15 +1,12 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import {
     Keyboard,
-    KeyboardAvoidingView,
-    Platform,
     StyleSheet,
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
     View
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 interface I {
@@ -19,29 +16,24 @@ interface I {
 }
 
 export default function ChatInput({ message, setMessage, submit }: I) {
-    const insets = useSafeAreaInsets();
 
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                keyboardVerticalOffset={insets.bottom + 10}
-            >
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            placeholder="Digite sua mensagem"
-                            style={styles.input}
-                            value={message}
-                            cursorColor="#246AF7"
-                            onChangeText={setMessage}
-                        />
-                        <TouchableOpacity onPress={submit} disabled={message.length <= 0} style={[styles.sendButton, message.length > 0 ? { backgroundColor: '#007bff' } : { backgroundColor: '#007bff65' }]}>
-                            <FontAwesome6 name="arrow-up" size={15} color="#FFF" iconStyle='solid' />
-                        </TouchableOpacity>
-                    </View>
-                </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
+
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        placeholder="Digite sua mensagem"
+                        style={styles.input}
+                        value={message}
+                        cursorColor="#246AF7"
+                        onChangeText={setMessage}
+                    />
+                    <TouchableOpacity onPress={submit} disabled={message.length <= 0} style={[styles.sendButton, message.length > 0 ? { backgroundColor: '#007bff' } : { backgroundColor: '#007bff65' }]}>
+                        <FontAwesome6 name="arrow-up" size={15} color="#FFF" iconStyle='solid' />
+                    </TouchableOpacity>
+                </View>
+            </TouchableWithoutFeedback>
         </View>
     );
 }
