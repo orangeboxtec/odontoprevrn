@@ -25,10 +25,14 @@ export default function Card({ data }: { data: IContact }) {
             <View style={styles.left}>
                 <Text style={[styles.bubbleText, { fontWeight: 700 }]}>{data.name}</Text>
                 <Text style={[styles.bubbleText, { fontWeight: 400 }]}>{data.address}</Text>
-                <View style={[styles.row, { alignItems: 'center' }]}>
-                    <Text style={[styles.bubbleText, { fontWeight: 700, fontSize: 18, paddingVertical: 5 }]}>{data.phone}</Text>
-                    <FontAwesome6 name="whatsapp" size={18} color="#42C954" iconStyle="regular" />
-                </View>
+                {
+                    data.phone &&
+                    <View style={[styles.row, { alignItems: 'center' }]}>
+                        <Text style={[styles.bubbleText, { fontWeight: 700, fontSize: 18, paddingVertical: 5 }]}>{data.phone}</Text>
+                        <FontAwesome6 name="whatsapp" size={18} color="#42C954" iconStyle="regular" />
+                    </View>
+                }
+
                 <Text style={[styles.bubbleText, { fontWeight: 400, fontStyle: 'italic' }]}>{data.specialty}</Text>
             </View>
             <View style={styles.right}>
@@ -40,9 +44,12 @@ export default function Card({ data }: { data: IContact }) {
                     <TouchableOpacity onPress={() => setFavorite(!favorite)}>
                         <FontAwesome6 name="heart" size={20} color={favorite ? "red" : "#333"} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={contact} style={styles.sendButton}>
-                        <FontAwesome6 name="chevron-right" size={15} color="white" />
-                    </TouchableOpacity>
+                    {
+                        data.phone &&
+                        <TouchableOpacity onPress={contact} style={styles.sendButton}>
+                            <FontAwesome6 name="chevron-right" size={15} color="white" />
+                        </TouchableOpacity>
+                    }
                 </View>
             </View>
         </View>
@@ -66,15 +73,18 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     left: {
+        flex: 1,
         flexShrink: 1,
-        flexWrap: 'wrap',
         minWidth: 0,
-        includeFontPadding: false,
     },
     right: {
+        flex: 1,
         alignItems: 'flex-end'
     },
-    bubbleText: { color: '#333' },
+    bubbleText: {
+        color: '#333', flexWrap: 'wrap', flexShrink: 1,
+        minWidth: 0
+    },
     sendButton: {
         backgroundColor: '#007AFF',
         paddingVertical: 6,
