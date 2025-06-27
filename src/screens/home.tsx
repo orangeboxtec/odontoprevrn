@@ -5,10 +5,10 @@ import { Dimensions, Image, Pressable, ScrollView, StyleSheet, View } from 'reac
 export default function Home() {
     const navigation = useNavigation()
     const screenWidth = Dimensions.get('window').width;
-    const [imageHeight, setImageHeight] = useState(null);
+    const [imageHeight, setImageHeight] = useState(0);
 
     useEffect(() => {
-        const { width, height } = Image.resolveAssetSource(require('../assets/home.png'));
+        const { width, height } = Image.resolveAssetSource(require('../assets/home_4x.png'));
         const ratio = height / width;
         setImageHeight(screenWidth * ratio);
     }, []);
@@ -23,20 +23,26 @@ export default function Home() {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ position: 'relative' }}>
                     <Image
-                        source={require('../assets/home.png')}
+                        source={require('../assets/home_4x.png')}
                         style={{ width: screenWidth, height: imageHeight }}
                         resizeMode="cover"
                     />
 
                     {/* Botões sobre a imagem */}
                     <Pressable
-                        style={[styles.touchArea, { position: 'absolute', top: 405, left: 27, width: 340, height: 45 }]}
+                        style={[styles.touchArea, { position: 'absolute', top: 380, left: 27, width: 340, height: 45 }]}
                         onPress={goToChat}
                     />
                     <Pressable
-                        style={[styles.touchArea, { position: 'absolute', top: 1440, right: 25, width: 75, height: 60 }]}
+                        style={[styles.touchArea, { position: 'absolute', top: 1410, right: 25, width: 75, height: 60 }]}
                         onPress={goToChat}
-                    />
+                    >
+                        <Image
+                            source={require('../assets/button.png')}
+                            style={{ width: 100, height: 100 }}
+                            resizeMode="contain"
+                        />
+                    </Pressable>
                 </View>
             </ScrollView>
         </View>
@@ -51,7 +57,7 @@ const styles = StyleSheet.create({
     touchArea: {
         position: 'absolute',
         zIndex: 10,
-        backgroundColor: 'rgba(0,0,0,0.1)', // torna tocável sem aparecer
+        backgroundColor: 'rgba(0,0,0,0)', // torna tocável sem aparecer
         borderRadius: 25,                    // opcional
     },
 });
