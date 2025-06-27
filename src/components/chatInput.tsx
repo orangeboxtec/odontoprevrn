@@ -9,7 +9,7 @@ import {
     TouchableWithoutFeedback,
     View
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 interface I {
@@ -19,11 +19,13 @@ interface I {
 }
 
 export default function ChatInput({ message, setMessage, submit }: I) {
+    const insets = useSafeAreaInsets();
 
     return (
-        <SafeAreaView style={[styles.container, { paddingBottom: Platform.OS === 'ios' ? 20 : 0 }]}>
+        <View style={styles.container}>
             <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={insets.bottom + 10}
             >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.inputContainer}>
@@ -40,7 +42,7 @@ export default function ChatInput({ message, setMessage, submit }: I) {
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     );
 }
 
