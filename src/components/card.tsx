@@ -73,12 +73,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     left: {
-        flex: 1,
         flexShrink: 1,
         minWidth: 0,
     },
     right: {
-        flex: 1,
         alignItems: 'flex-end'
     },
     bubbleText: {
