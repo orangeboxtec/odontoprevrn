@@ -21,7 +21,7 @@ interface I {
 export default function ChatInput({ message, setMessage, submit }: I) {
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { paddingBottom: Platform.OS === 'ios' ? 20 : 0 }]}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
@@ -45,7 +45,7 @@ export default function ChatInput({ message, setMessage, submit }: I) {
 }
 
 const styles = StyleSheet.create({
-    container: { height: '20%'},
+    container: { height: 'auto' },
     inputContainer: {
         flexDirection: 'row',
         padding: 10,

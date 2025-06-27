@@ -1,7 +1,8 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { IMessage } from '../screens/home';
+import { IMessage } from '../screens/chat';
+import Card from './card';
 
 interface I {
     messages: IMessage[]
@@ -18,14 +19,21 @@ export default function CustomChat({ messages }: I) {
             data={messages}
             keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (
-                <View style={[styles.bubble, item.sent ? { alignSelf: 'flex-end', backgroundColor: '#007AFF' } : { alignSelf: 'flex-start', backgroundColor: '#444444' }]}>
+                <View style={[styles.bubble, item.sent ? { alignSelf: 'flex-end', backgroundColor: '#007AFF' } : { alignSelf: 'flex-start', backgroundColor: '#E1E1E1' }]}>
                     {
-                        item.type == "text"
-                            ? <Text style={styles.bubbleText}>{item.data}</Text>
-                            : <TouchableOpacity onPress={() => download(item.data)}>
-                                <FontAwesome6 name="file-pdf" size={30} color="white" iconStyle='solid' />
+                        item.type === "text" ? (
+                            <Text style={{ color: item.sent ? '#fff' : '#222' }}>
+                                {item.data}
+                            </Text>
+                        ) : item.type === "pdf" ? (
+                            <TouchableOpacity onPress={() => download(item.data)}>
+                                <FontAwesome6 name="file-pdf" size={30} color="white" />
                             </TouchableOpacity>
+                        ) : (
+                            <Card data={item.contact!} />
+                        )
                     }
+
                 </View>
             )}
             contentContainerStyle={styles.listContent}
@@ -41,6 +49,8 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         marginBottom: 6,
         maxWidth: '75%',
+        flexShrink: 1,
+        overflow: 'hidden'
     },
     bubbleText: { color: '#fff' },
     inputContainer: {

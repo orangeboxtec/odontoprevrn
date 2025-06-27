@@ -1,250 +1,57 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Animated, Dimensions, Image, Linking, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
-import uuid from 'react-native-uuid';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import CustomChat from '../components/chat';
-import ChatInput from '../components/chatInput';
-import api from '../utils/api';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
-export interface IMessage {
-    id: string | number
-    chatId: string
-    data: string
-    createdAt: Date
-    type: string
-    sent?: boolean
-}
-
-const screenWidth = Dimensions.get('window').width;
 export default function Home() {
-    const navigation = useNavigation();
-
-    const [id, setId] = useState('')
-    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState<IMessage[]>([])
-    const [history, setHistory] = useState<IMessage[][]>([])
-
-    const [open, setOpen] = useState(false);
-    const slideAnim = useRef(new Animated.Value(-screenWidth)).current;
-
-    function newChat() {
-        setHistory(prev => [...prev, messages]);
-        setMessage('')
-        setMessages([])
-        setId(uuid.v4())
-        getLocation()
-    }
-    function submit() {
-        if (!message.trim()) return;
-
-        const userMsg: IMessage = {
-            chatId: id,
-            id: messages.length + 1,
-            data: message,
-            createdAt: new Date(),
-            sent: true,
-            type: 'text',
-        };
-
-        const newMessages = [...messages, userMsg];
-        setMessages(newMessages);
-        setMessage('');
-        api.post('/send', {
-            message: message,
-            chatId: id,
-            location: {
-                latitude: location?.latitude,
-                longitude: location?.longitude,
-            },
-        }).then((resp) => {
-            console.log(resp)
-            const botMsg: IMessage = {
-                chatId: id,
-                id: newMessages.length + 1,
-                data: resp.data.data ?? '',
-                createdAt: new Date(),
-                sent: false,
-                type: resp.data.type,
-            };
-
-            setMessages(prev => [...prev, botMsg]);
-        });
-    }
-
-    function toggleMenu() {
-        if (open) {
-            Animated.timing(slideAnim, {
-                toValue: -screenWidth,
-                duration: 200,
-                useNativeDriver: false,
-            }).start(() => setOpen(false));
-        } else {
-            setOpen(true);
-            Animated.timing(slideAnim, {
-                toValue: 0,
-                duration: 200,
-                useNativeDriver: false,
-            }).start();
-        }
-    }
-    function selectChat(item: IMessage[]) {
-        setMessages(item)
-        setId(item[0].chatId)
-    }
+    const navigation = useNavigation()
+    const screenWidth = Dimensions.get('window').width;
+    const [imageHeight, setImageHeight] = useState(null);
 
     useEffect(() => {
-        setId(uuid.v4() as string)
-        getLocation()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-    async function hasLocationPermission(): Promise<boolean> {
-        if (Platform.OS !== 'android') return true;
-        if (Platform.Version < 23) return true;
+        const { width, height } = Image.resolveAssetSource(require('../assets/home.png'));
+        const ratio = height / width;
+        setImageHeight(screenWidth * ratio);
+    }, []);
+    if (!imageHeight) return null;
 
-        const granted = await PermissionsAndroid.check(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-        );
-        if (granted) return true;
-
-        const status = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-                title: 'Permissão de Localização',
-                message: 'Precisamos da sua localização para continuar.',
-                buttonPositive: 'Permitir',
-                buttonNegative: 'Cancelar',
-            }
-        );
-
-        if (status === PermissionsAndroid.RESULTS.GRANTED) return true;
-
-        if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-            Alert.alert(
-                'Permissão desativada',
-                'Você desativou a permissão de localização permanentemente. Ative manualmente nas configurações.',
-                [
-                    { text: 'Cancelar', style: 'cancel' },
-                    {
-                        text: 'Abrir configurações',
-                        onPress: () => Linking.openSettings(),
-                    },
-                ]
-            );
-        }
-
-        return false;
-    }
-    async function getLocation() {
-        const ok = await hasLocationPermission();
-        if (!ok) return;
-
-        Geolocation.getCurrentPosition(
-            position => {
-                setLocation({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
-            },
-            error => console.log(error),
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-        );
+    function goToChat() {
+        navigation.navigate('Chat')
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={toggleMenu}>
-                    <FontAwesome6 name="bars" size={20} color="black" iconStyle='solid' />
-                </TouchableOpacity>
+        <View style={{ flex: 1 }}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={{ position: 'relative' }}>
+                    <Image
+                        source={require('../assets/home.png')}
+                        style={{ width: screenWidth, height: imageHeight }}
+                        resizeMode="cover"
+                    />
 
-                <Text style={styles.headerText}>OdontoPrev IA</Text>
+                    {/* Botões sobre a imagem */}
+                    <Pressable
+                        style={[styles.touchArea, { position: 'absolute', top: 405, left: 27, width: 340, height: 45 }]}
+                        onPress={goToChat}
+                    />
+                    <Pressable
+                        style={[styles.touchArea, { position: 'absolute', top: 1440, right: 25, width: 75, height: 60 }]}
+                        onPress={goToChat}
+                    />
+                </View>
+            </ScrollView>
+        </View>
 
-                <TouchableOpacity onPress={newChat}>
-                    <FontAwesome6 name="comment-medical" size={20} color="black" iconStyle='outline' />
-                </TouchableOpacity>
-            </View>
-            {
-                messages.length > 0
-                    ?
-                    <CustomChat messages={messages} />
-                    : <View style={styles.content}>
-                        <Image source={require('../assets/logo.png')} style={styles.contentImage} />
-                        <Text style={styles.contentTitle}>Olá, eu sou o OdontoPrev IA</Text>
-                        <Text style={styles.contentSubTitle}>Como posso ajudar você hoje?</Text>
-                    </View>
-            }
-            <ChatInput setMessage={setMessage} message={message} submit={submit} />
-
-            {open && (
-                <Pressable style={styles.backdrop} onPress={toggleMenu} />
-            )}
-            <Animated.View style={[styles.sideMenu, { left: slideAnim }]}>
-                {history.map((item, index) => (
-                    <TouchableOpacity key={index} onPress={() => selectChat(item)}>
-                        <Text style={styles.menuItem}>Chat {index + 1}</Text>
-                    </TouchableOpacity>
-                ))}
-            </Animated.View>
-        </SafeAreaView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F0F0F0', // cor de fundo padrão aqui
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: "space-between",
-        alignItems: "center",
-        margin: 15
-    },
-    headerText: {
-        fontWeight: "bold"
-    },
-    content: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    contentImage: {
-        width: 100,
-        height: 100,
-    },
-    contentTitle: {
-        fontWeight: "bold",
-        fontSize: 22,
-        marginBottom: 5
-    },
-    contentSubTitle: {
-        fontWeight: "600",
-        color: "#808080"
-    },
+    root: { flex: 1, backgroundColor: '#000' },
 
-    backdrop: {
+    /* área clicável: invisível (0.01 de opacidade só pra depuração; tire se quiser 100 % transparente) */
+    touchArea: {
         position: 'absolute',
-        backgroundColor: 'rgba(0,0,0,0.3)',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1,
+        zIndex: 10,
+        backgroundColor: 'rgba(0,0,0,0.1)', // torna tocável sem aparecer
+        borderRadius: 25,                    // opcional
     },
-    sideMenu: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        width: screenWidth * 0.7,
-        backgroundColor: '#fff',
-        paddingTop: 60,
-        paddingHorizontal: 20,
-        elevation: 10,
-        zIndex: 2,
-    },
-    menuItem: { marginVertical: 15, fontSize: 16 }
 });
