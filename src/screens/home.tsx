@@ -33,18 +33,19 @@ export default function Home() {
                         style={[styles.touchArea, { position: 'absolute', top: 380, left: 27, width: 340, height: 45 }]}
                         onPress={goToChat}
                     />
-                    <Pressable
-                        style={[styles.touchArea, { position: 'absolute', top: 1410, right: 25, width: 75, height: 60 }]}
-                        onPress={goToChat}
-                    >
-                        <Image
-                            source={require('../assets/button.png')}
-                            style={{ width: 100, height: 100 }}
-                            resizeMode="contain"
-                        />
-                    </Pressable>
+
                 </View>
             </ScrollView>
+            <Pressable
+                style={[styles.touchArea, { position: 'absolute', top: '85%', right: 25, width: 75, height: 60 }]}
+                onPress={goToChat}
+            >
+                <Image
+                    source={require('../assets/button.png')}
+                    style={{ width: 100, height: 100 }}
+                    resizeMode="contain"
+                />
+            </Pressable>
         </View>
 
     );

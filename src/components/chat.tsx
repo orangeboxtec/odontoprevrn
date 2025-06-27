@@ -5,10 +5,11 @@ import { IMessage } from '../screens/chat';
 import Card from './card';
 
 interface I {
-    messages: IMessage[]
+    messages: IMessage[],
+    ref: React.RefObject<FlatList<any> | null>
 }
 
-export default function CustomChat({ messages }: I) {
+export default function CustomChat({ messages, ref }: I) {
 
     function download(data) {
         //Não pronto para baixar
@@ -16,6 +17,7 @@ export default function CustomChat({ messages }: I) {
 
     return (
         <FlatList
+            ref={ref}
             data={messages}
             keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (

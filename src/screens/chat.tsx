@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Animated, Dimensions, Image, KeyboardAvoidingView, Linking, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Animated, Dimensions, FlatList, Image, KeyboardAvoidingView, Linking, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
@@ -37,6 +37,8 @@ export default function Chat() {
 
     const [open, setOpen] = useState(false);
     const slideAnim = useRef(new Animated.Value(-screenWidth)).current;
+    const scrollRef = useRef<FlatList>(null);
+    scrollRef.current?.scrollToEnd({ animated: true });
 
     function newChat() {
         setHistory(prev => [...prev, messages]);
@@ -86,6 +88,10 @@ export default function Chat() {
                 };
                 setMessages(prev => [...prev, botMsg]);
             });
+
+            requestAnimationFrame(() =>
+                scrollRef.current?.scrollToEnd({ animated: true })
+            );
         });
     }
 
@@ -180,7 +186,7 @@ export default function Chat() {
                         <FontAwesome6 name="bars" size={20} color="black" iconStyle='solid' />
                     </TouchableOpacity>
 
-                    <Text style={styles.headerText}>OdontoPrev</Text>
+                    <Text style={styles.headerText}>Odontoprev</Text>
 
                     <TouchableOpacity onPress={newChat}>
                         <FontAwesome6 name="comment-medical" size={20} color="black" iconStyle='outline' />
@@ -189,7 +195,7 @@ export default function Chat() {
                 {
                     messages.length > 0
                         ?
-                        <CustomChat messages={messages} />
+                        <CustomChat messages={messages} ref={scrollRef} />
                         : <View style={styles.content}>
                             <Image source={require('../assets/logo.png')} style={styles.contentImage} />
                             <Text style={styles.contentTitle}>Olá, eu sou o Dom</Text>
