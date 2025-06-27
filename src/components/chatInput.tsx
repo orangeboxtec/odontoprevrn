@@ -45,7 +45,7 @@ export default function ChatInput({ message, setMessage, submit }: I) {
 }
 
 const styles = StyleSheet.create({
-    container: { height: 60 },
+    container: { height: '20%'},
     inputContainer: {
         flexDirection: 'row',
         padding: 10,

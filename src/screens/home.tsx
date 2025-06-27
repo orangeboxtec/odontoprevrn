@@ -7,6 +7,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import CustomChat from '../components/chat';
 import ChatInput from '../components/chatInput';
 import api from '../utils/api';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export interface IMessage {
     id: string | number
@@ -154,7 +155,7 @@ export default function Home() {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={toggleMenu}>
                     <FontAwesome6 name="bars" size={20} color="black" iconStyle='solid' />
@@ -188,8 +189,7 @@ export default function Home() {
                     </TouchableOpacity>
                 ))}
             </Animated.View>
-
-        </View>
+        </SafeAreaView>
     )
 }
 
