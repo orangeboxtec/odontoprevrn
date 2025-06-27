@@ -181,8 +181,7 @@ export default function Chat() {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={insets.bottom}
+            behavior={undefined}
         >
             <SafeAreaView style={styles.container}>
                 <View style={styles.header}>
