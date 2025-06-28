@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useRef, useState } from 'react';
 import { Alert, Animated, Dimensions, FlatList, Image, KeyboardAvoidingView, Linking, PermissionsAndroid, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -120,11 +121,14 @@ export default function Chat() {
         setId(item[0].chatId)
     }
 
-    useEffect(() => {
-        setId(uuid.v4() as string)
-        getLocation()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    useFocusEffect(
+        useCallback(() => {
+            setId(uuid.v4() as string);
+            getLocation();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
+    );
+
     async function hasLocationPermission(): Promise<boolean> {
         if (Platform.OS !== 'android') return true;
         if (Platform.Version < 23) return true;
