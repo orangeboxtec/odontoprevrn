@@ -44,7 +44,8 @@ export default function Chat() {
         setHistory(prev => [...prev, messages]);
         setMessage('')
         setMessages([])
-        setId(uuid.v4())
+        // setId(uuid.v4())
+        setId('')
         getLocation()
     }
     function submit() {
@@ -75,8 +76,11 @@ export default function Chat() {
             },
         }).then((resp) => {
             resp.data.forEach((item: any, index: number) => {
+                setId(item.chatId);
+                console.log(item.chatId);
+                console.log(id);
                 const botMsg: IMessage = {
-                    chatId: id,
+                    chatId: item.chatId,
                     id: (newMessages.length + 1) + index,
                     data: item.data ?? '',
                     createdAt: new Date(),
@@ -181,7 +185,8 @@ export default function Chat() {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={undefined}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={insets.bottom}
         >
             <SafeAreaView style={styles.container}>
                 <View style={styles.header}>

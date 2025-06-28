@@ -281,7 +281,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = X8GY7M3F3S;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = odontoprevrn/Info.plist;
@@ -291,7 +291,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -311,7 +311,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = X8GY7M3F3S;
 				INFOPLIST_FILE = odontoprevrn/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SmileTech;
@@ -320,7 +320,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
